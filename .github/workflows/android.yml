@@ -19,8 +19,7 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
-
-    - name: "Build and Release"
+    - name: Build and Release
         run: |
           cd android	 
           chmod a+x gradlew
