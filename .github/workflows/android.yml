@@ -24,3 +24,15 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+      env:
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+    - name: "upload apk to App Center"
+        uses: wzieba/AppCenter-Github-Action@v1
+        with:
+          appName: "jeyapriya@vthink.co.in/React-App"
+          token: ${{secrets.APP_CENTER_TOKEN}}
+          file: ./android/app/build/outputs/apk/release/app-release.apk
+          group: "tester" 
+          notifyTesters: "true"
