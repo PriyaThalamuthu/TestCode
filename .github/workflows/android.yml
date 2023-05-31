@@ -1,10 +1,6 @@
-name: Android CI
+name: Build, code quality, tests
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push]
 
 jobs:
   build:
@@ -12,29 +8,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: set up JDK 11
-      uses: actions/setup-java@v3
+    - uses: actions/checkout@v1
+    - name: set up JDK 1.8
+      uses: actions/setup-java@v1
       with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
-    - name: Build and Release
-        run: |
-          cd android	 
-          chmod a+x gradlew
-          ./gradlew build
-          ./gradlew assembleRelease
-          ./gradlew app:bundleRelease
-        env:
-          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.STORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-    - name: "upload apk to App Center"
-        uses: wzieba/AppCenter-Github-Action@v1
-        with:
-          appName: "jeyapriya@vthink.co.in/React-App"
-          token: ${{secrets.APP_CENTER_TOKEN}}
-          file: ./android/app/build/outputs/apk/release/app-release.apk
-          group: "tester" 
-          notifyTesters: "true"
+        java-version: 1.8
+    - name: build release
+      run: ./gradlew assembleRelease
+    - name: upload artefact to App Center
+      uses: wzieba/AppCenter-Github-Action@v1
+      with:
+        appName: wzieba/Sample-App
+        token: ${{secrets.APP_CENTER_TOKEN}}
+        group: Testers
+        file: app/build/outputs/apk/release/app-release-unsigned.apk
+        notifyTesters: true
+        debug: false
