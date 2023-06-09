@@ -16,6 +16,7 @@ jobs:
       - name: "Build and Release"
         run: |
           chmod a+x gradlew
+          cd android
           ./gradlew build
           ./gradlew assembleRelease
           ./gradlew app:bundleRelease
